@@ -1,0 +1,36 @@
+Comandos Docker para iniciar:
+
+1. Lanza el contenedor de la DB
+
+docker run --name siba-auth-db -v /Users/macuser/Proyectos/siba-auth2-server/mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=49421702 -d mysql:5.5
+
+Producción (s2.sientifica.com):
+docker run --name siba-auth-db -v /home/sleefs/app/mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=49421702 -d mysql:5.5
+
+2. Lanza el contendor de la App
+
+##########################################
+# ESTAS SON LAS VERSIONES DE CONTENEDORES 
+# EN PRODUCCION DESPLEGADAS EN 2019-05-21
+# OMITIR LAS ANTERIORES
+##########################################
+
+- Actualización de stack operativo (Se cambia el container de docker por uno con soporte para ssl y php7.3)
+
+Local:
+docker run -id  --name siba-auth --link siba-auth-db:mysql -p 80:80 -p 443:443 -v /Users/macuser/Proyectos/ssl-test/local.sientifica.com/uso-local/certs/:/etc/pki/tls/certs/sientifica/ -v /Users/macuser/Proyectos/ssl-test/local.sientifica.com/uso-local/private/:/etc/pki/tls/private/sientifica/ -v /Users/macuser/Proyectos/ssl-test/local.sientifica.com/uso-local/httpd-conf/:/etc/httpd/sites-available/ -v /Users/macuser/Proyectos/siba-auth2-server/app:/home/admin/app maomuriel/siba-auth:1.0.0
+
+
+Produccion:
+docker run -id  --name siba-auth --link siba-auth-db:mysql -p 8888:80 -p 4443:443 -v /home/sleefs/app/ssl-config/certs/:/etc/pki/tls/certs/sientifica/ -v /home/sleefs/app/ssl-config/private/:/etc/pki/tls/private/sientifica/ -v /home/sleefs/app/ssl-config/httpd-conf/:/etc/httpd/sites-available/ -v /home/sleefs/app/sleefs-app:/home/admin/app maomuriel/siba-auth:1.0.0
+
+
+
+
+> service httpd start
+
+3. Lanza contenedor phpMyAdmin
+
+La imagen de este contenedor: https://hub.docker.com/r/phpmyadmin/phpmyadmin/
+
+docker run --name siba-auth-myadmin -d --link siba-auth-db:mysql -e PMA_HOST='siba-auth-db' -p 8890:80 phpmyadmin/phpmyadmin

@@ -1,0 +1,16 @@
+mysql-data/
+mysql-data/*
+app/.env
+app/.env-prd
+app/vendor/
+app/app.log
+app/storage/*.key
+app/storage/logs/
+app/storage/framework/*
+app/storage/pager.txt
+app/php_errors.log
+app/error_log
+/.phpintel
+/.phpintel/*
+
+
